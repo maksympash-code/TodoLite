@@ -1,4 +1,4 @@
-package ua.knu.maksym_pashchenko.todolite.ui.theme
+package ua.knu.maksym_pashchenko.todolite.presentation.ui.theme
 
 import androidx.compose.material3.Typography
 import androidx.compose.ui.text.TextStyle

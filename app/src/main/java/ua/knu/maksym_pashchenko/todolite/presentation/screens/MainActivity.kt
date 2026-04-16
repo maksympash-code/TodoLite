@@ -1,4 +1,4 @@
-package ua.knu.maksym_pashchenko.todolite
+package ua.knu.maksym_pashchenko.todolite.presentation.screens
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -7,10 +7,7 @@ import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
-import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -19,7 +16,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import ua.knu.maksym_pashchenko.todolite.ui.theme.TodoLiteTheme
+import ua.knu.maksym_pashchenko.todolite.presentation.components.TodoInputSection
+import ua.knu.maksym_pashchenko.todolite.presentation.components.TodoList
+import ua.knu.maksym_pashchenko.todolite.presentation.ui.theme.TodoLiteTheme
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -40,31 +39,22 @@ class MainActivity : ComponentActivity() {
 }
 
 @Composable
-fun TodoHomeScreen(modifier: Modifier) {
+fun TodoHomeScreen(modifier: Modifier = Modifier) {
+    val tasks = listOf("Buy milk", "Study Kotlin", "Read Android docs")
     Column(
-        modifier = modifier,
+        modifier = modifier
+            .fillMaxSize()
+            .padding(16.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center,
+        verticalArrangement = Arrangement.Top,
     ) {
         Text(
             text = "Todo Lite",
             style = MaterialTheme.typography.headlineMedium,
-            modifier = Modifier.padding(bottom = 30.dp)
-        )
-        Text(
-            text = "Мій перший Android pet-project",
             modifier = Modifier.padding(bottom = 20.dp)
         )
-        Button(
-            onClick = {},
-            modifier = Modifier
-                .width(200.dp)
-                .height(60.dp)
-        ) {
-            Text(
-                text = "Add task",
-            )
-        }
+        TodoInputSection()
+        TodoList(tasks = tasks)
     }
 }
 
@@ -73,8 +63,6 @@ fun TodoHomeScreen(modifier: Modifier) {
 @Composable
 fun TodoHomeScreenPreview() {
     TodoLiteTheme {
-        TodoHomeScreen(
-            modifier = Modifier.fillMaxSize()
-        )
+        TodoHomeScreen()
     }
 }

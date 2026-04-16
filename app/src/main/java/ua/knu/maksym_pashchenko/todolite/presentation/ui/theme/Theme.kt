@@ -1,6 +1,5 @@
-package ua.knu.maksym_pashchenko.todolite.ui.theme
+package ua.knu.maksym_pashchenko.todolite.presentation.ui.theme
 
-import android.app.Activity
 import android.os.Build
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.MaterialTheme
