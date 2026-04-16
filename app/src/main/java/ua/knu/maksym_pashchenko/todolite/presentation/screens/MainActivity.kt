@@ -12,6 +12,10 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
@@ -39,8 +43,22 @@ class MainActivity : ComponentActivity() {
 }
 
 @Composable
-fun TodoHomeScreen(modifier: Modifier = Modifier) {
-    val tasks = listOf("Buy milk", "Study Kotlin", "Read Android docs")
+fun TodoHomeScreen(
+    modifier: Modifier = Modifier
+) {
+    var taskText by rememberSaveable { mutableStateOf("") }
+    var tasks by rememberSaveable {
+        mutableStateOf(listOf("Buy milk", "Study Kotlin", "Read Android docs"))
+    }
+
+    val onAddTaskClick = {
+        val trimmedTaskText = taskText.trim()
+        if (trimmedTaskText.isNotEmpty()){
+            tasks = tasks + trimmedTaskText
+            taskText = ""
+        }
+    }
+
     Column(
         modifier = modifier
             .fillMaxSize()
@@ -53,7 +71,12 @@ fun TodoHomeScreen(modifier: Modifier = Modifier) {
             style = MaterialTheme.typography.headlineMedium,
             modifier = Modifier.padding(bottom = 20.dp)
         )
-        TodoInputSection()
+        TodoInputSection(
+            taskText = taskText,
+            onTaskTextChange = { taskText = it },
+            onAddTaskClick = onAddTaskClick,
+            enabled = taskText.trim().isNotEmpty()
+        )
         TodoList(tasks = tasks)
     }
 }

@@ -8,10 +8,6 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
@@ -19,8 +15,13 @@ import androidx.compose.ui.unit.dp
 import ua.knu.maksym_pashchenko.todolite.presentation.ui.theme.TodoLiteTheme
 
 @Composable
-fun TodoInputSection(modifier: Modifier = Modifier) {
-    var taskText by rememberSaveable { mutableStateOf("") }
+fun TodoInputSection(
+    taskText: String,
+    onTaskTextChange: (String) -> Unit,
+    onAddTaskClick: () -> Unit,
+    enabled: Boolean,
+    modifier: Modifier = Modifier
+) {
 
     Row(
         modifier = modifier
@@ -30,13 +31,14 @@ fun TodoInputSection(modifier: Modifier = Modifier) {
     ) {
         TextField(
             value = taskText,
-            onValueChange = { taskText = it },
+            onValueChange = onTaskTextChange,
             label = { Text("Нова задача") },
             placeholder = { Text("Введіть текст задачі") },
             modifier = Modifier.weight(1f)
         )
         Button(
-            onClick = {},
+            onClick = onAddTaskClick,
+            enabled = enabled,
             modifier = Modifier
                 .width(120.dp)
         ) {
@@ -52,6 +54,11 @@ fun TodoInputSection(modifier: Modifier = Modifier) {
 @Composable
 fun TodoInputSectionPreview() {
     TodoLiteTheme {
-        TodoInputSection()
+        TodoInputSection(
+            taskText = "",
+            onTaskTextChange = {},
+            onAddTaskClick = {},
+            enabled = true,
+        )
     }
 }

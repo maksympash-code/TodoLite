@@ -8,7 +8,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 
 @Composable
-fun TodoItemRow(title: String) {
+fun TodoItemRow(
+    title: String,
+    modifier: Modifier = Modifier
+) {
     Text(
         text = title,
         modifier = Modifier
