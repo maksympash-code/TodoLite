@@ -14,12 +14,14 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import ua.knu.maksym_pashchenko.todolite.domain.models.TodoItem
 import ua.knu.maksym_pashchenko.todolite.presentation.components.TodoInputSection
 import ua.knu.maksym_pashchenko.todolite.presentation.components.TodoList
 import ua.knu.maksym_pashchenko.todolite.presentation.ui.theme.TodoLiteTheme
@@ -47,14 +49,24 @@ fun TodoHomeScreen(
     modifier: Modifier = Modifier
 ) {
     var taskText by rememberSaveable { mutableStateOf("") }
-    var tasks by rememberSaveable {
-        mutableStateOf(listOf("Buy milk", "Study Kotlin", "Read Android docs"))
+    var tasks by remember {
+        mutableStateOf(listOf(
+            TodoItem(1, "Buy milk", false),
+            TodoItem(2, "Study Kotlin", false),
+            TodoItem(3, "Read Android docs", true)
+            )
+        )
     }
 
     val onAddTaskClick = {
         val trimmedTaskText = taskText.trim()
         if (trimmedTaskText.isNotEmpty()){
-            tasks = tasks + trimmedTaskText
+            val newId = (tasks.maxOfOrNull { it.id } ?: 0) + 1
+            tasks = tasks + TodoItem(
+                id = newId,
+                title = trimmedTaskText,
+                isDone = false
+            )
             taskText = ""
         }
     }
@@ -77,7 +89,18 @@ fun TodoHomeScreen(
             onAddTaskClick = onAddTaskClick,
             enabled = taskText.trim().isNotEmpty()
         )
-        TodoList(tasks = tasks)
+        TodoList(
+            tasks = tasks,
+            onTaskCheckedChange = { taskId, isChecked ->
+                tasks = tasks.map { task ->
+                    if (taskId == task.id) task.copy(isDone = isChecked)
+                    else task
+                }
+            },
+            onTaskDeleteClick = { taskId ->
+                tasks = tasks.filter { it.id != taskId }
+            }
+        )
     }
 }
 
