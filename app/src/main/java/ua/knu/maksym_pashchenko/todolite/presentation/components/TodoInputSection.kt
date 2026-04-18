@@ -17,9 +17,10 @@ import ua.knu.maksym_pashchenko.todolite.presentation.ui.theme.TodoLiteTheme
 @Composable
 fun TodoInputSection(
     taskText: String,
+    isError: Boolean,
+    errorMessage: String?,
     onTaskTextChange: (String) -> Unit,
     onAddTaskClick: () -> Unit,
-    enabled: Boolean,
     modifier: Modifier = Modifier
 ) {
 
@@ -34,16 +35,20 @@ fun TodoInputSection(
             onValueChange = onTaskTextChange,
             label = { Text("Нова задача") },
             placeholder = { Text("Введіть текст задачі") },
+            isError = isError,
+            supportingText = {
+                if (errorMessage != null)
+                    Text(text = errorMessage)
+            },
             modifier = Modifier.weight(1f)
         )
         Button(
             onClick = onAddTaskClick,
-            enabled = enabled,
             modifier = Modifier
                 .width(120.dp)
         ) {
             Text(
-                text = "Add task",
+                text = "Додати",
             )
         }
     }
@@ -58,7 +63,23 @@ fun TodoInputSectionPreview() {
             taskText = "",
             onTaskTextChange = {},
             onAddTaskClick = {},
-            enabled = true,
+            isError = false,
+            errorMessage = null
+        )
+    }
+}
+
+
+@Preview(showBackground = true)
+@Composable
+fun TodoInputSectionErrorPreview() {
+    TodoLiteTheme {
+        TodoInputSection(
+            taskText = "",
+            onTaskTextChange = {},
+            onAddTaskClick = {},
+            isError = true,
+            errorMessage = "Назва задачі не може бути порожньою"
         )
     }
 }

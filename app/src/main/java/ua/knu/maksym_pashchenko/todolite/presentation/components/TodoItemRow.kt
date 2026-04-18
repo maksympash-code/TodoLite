@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material3.Card
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -26,12 +27,15 @@ fun TodoItemRow(
     onTaskDeleteClick: (Int) -> Unit,
     modifier: Modifier = Modifier
 ) {
-    Row(
+    Card(
         modifier = modifier
             .fillMaxWidth()
-            .padding(horizontal = 16.dp, vertical = 8.dp),
-        verticalAlignment = Alignment.CenterVertically
     ) {
+        Row(
+            modifier = Modifier
+                .padding(horizontal = 16.dp, vertical = 8.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
             Text(
                 text = task.title,
                 color = if (task.isDone) MaterialTheme.colorScheme.secondary else MaterialTheme.colorScheme.onSurface,
@@ -40,24 +44,25 @@ fun TodoItemRow(
                     .padding(end = 8.dp)
                     .weight(1f)
             )
-        IconButton(
-            onClick = {
-                onTaskDeleteClick(task.id)
-            },
-            enabled = true
-        ) {
-            Icon(
-                imageVector = Icons.Filled.Delete,
-                contentDescription = "Delete task"
+            IconButton(
+                onClick = {
+                    onTaskDeleteClick(task.id)
+                },
+            ) {
+                Icon(
+                    imageVector = Icons.Filled.Delete,
+                    contentDescription = "Видалити задачу"
+                )
+            }
+            Checkbox(
+                checked = task.isDone,
+                onCheckedChange = { isChecked ->
+                    onTaskCheckedChange(task.id, isChecked)
+                },
             )
         }
-        Checkbox(
-            checked = task.isDone,
-            onCheckedChange = { isChecked ->
-                onTaskCheckedChange(task.id, isChecked)
-            },
-        )
     }
+
 }
 
 @Preview(showBackground = true)
@@ -65,7 +70,7 @@ fun TodoItemRow(
 fun TodoItemRowPreview() {
     TodoLiteTheme {
         TodoItemRow(
-            task = TodoItem(1, "Buy a TV", false),
+            task = TodoItem(1, "Купити телевізор", false),
             onTaskCheckedChange = {_, _ -> },
             onTaskDeleteClick = {}
         )
