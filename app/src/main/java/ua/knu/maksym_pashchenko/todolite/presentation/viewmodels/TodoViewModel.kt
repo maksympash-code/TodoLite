@@ -1,61 +1,66 @@
 package ua.knu.maksym_pashchenko.todolite.presentation.viewmodels
 
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asStateFlow
+import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.launch
 import ua.knu.maksym_pashchenko.todolite.domain.models.TodoItem
-import ua.knu.maksym_pashchenko.todolite.presentation.TodoConstants
-import kotlin.collections.filter
+import ua.knu.maksym_pashchenko.todolite.domain.repositories.TodoRepository
 
-class TodoViewModel : ViewModel() {
+class TodoViewModel(
+    private val repository: TodoRepository
+) : ViewModel() {
 
-    private val _uiState = MutableStateFlow(TodoUiState())
-    val uiState: StateFlow<TodoUiState> = _uiState.asStateFlow()
+    val tasks: Flow<List<TodoItem>> = repository.getAllTasks()
 
-    fun onTaskTextChange(newValue: String) {
-        _uiState.value = _uiState.value.copy(
-            taskText = newValue,
+    var taskText by mutableStateOf("")
+        private set
+
+    var errorMessage by mutableStateOf<String?>(null)
+        private set
+
+    fun onTaskTextChange(newText: String) {
+        taskText = newText
+
+        if (newText.isNotBlank()) {
             errorMessage = null
-        )
+        }
     }
 
     fun onAddTaskClick() {
-        val title = _uiState.value.taskText.trim()
+        val cleanTitle = taskText.trim()
 
-        if (title.isEmpty()) {
-            _uiState.value = _uiState.value.copy(
-                errorMessage = TodoConstants.EMPTY_TASK_ERROR
-            )
+        if (cleanTitle.isEmpty()) {
+            errorMessage = "Поле не може бути порожнім"
             return
         }
 
-        val newId = (_uiState.value.tasks.maxOfOrNull { it.id } ?: 0) + 1
-
-        val newTask = TodoItem(
-            title = title,
-            id =  newId,
-            isDone = false
-        )
-
-        _uiState.value = _uiState.value.copy(
-            tasks = _uiState.value.tasks + newTask,
-            taskText = "",
-            errorMessage = null
-        )
-    }
-
-    fun onTaskCheckedChange(taskId: Int, isChecked: Boolean) {
-        val updatedTasks = _uiState.value.tasks.map { task ->
-            if (task.id == taskId) task.copy(isDone = isChecked)
-            else task
+        viewModelScope.launch {
+            repository.addTask(
+                TodoItem(
+                    id = 0,
+                    title = cleanTitle,
+                    isDone = false
+                )
+            )
         }
 
-        _uiState.value = _uiState.value.copy(tasks = updatedTasks)
+        taskText = ""
+        errorMessage = null
+    }
+
+    fun onTaskCheckedChange(task: TodoItem, isChecked: Boolean) {
+        viewModelScope.launch {
+            repository.updateTask(task.copy(isDone = isChecked))
+        }
     }
 
     fun onTaskDeleteClick(taskId: Int) {
-        val updatedTasks = _uiState.value.tasks.filter { it.id != taskId }
-        _uiState.value = _uiState.value.copy(tasks = updatedTasks)
+        viewModelScope.launch {
+            repository.deleteTaskById(taskId)
+        }
     }
 }

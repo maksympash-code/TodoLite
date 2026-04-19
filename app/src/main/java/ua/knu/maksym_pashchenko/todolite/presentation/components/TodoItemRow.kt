@@ -23,7 +23,7 @@ import ua.knu.maksym_pashchenko.todolite.presentation.ui.theme.TodoLiteTheme
 @Composable
 fun TodoItemRow(
     task: TodoItem,
-    onTaskCheckedChange: (Int, Boolean) -> Unit,
+    onTaskCheckedChange: (TodoItem, Boolean) -> Unit,
     onTaskDeleteClick: (Int) -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -57,7 +57,7 @@ fun TodoItemRow(
             Checkbox(
                 checked = task.isDone,
                 onCheckedChange = { isChecked ->
-                    onTaskCheckedChange(task.id, isChecked)
+                    onTaskCheckedChange(task, isChecked)
                 },
             )
         }

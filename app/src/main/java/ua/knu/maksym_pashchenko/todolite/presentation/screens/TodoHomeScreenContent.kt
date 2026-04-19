@@ -10,17 +10,20 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import ua.knu.maksym_pashchenko.todolite.domain.models.TodoItem
 import ua.knu.maksym_pashchenko.todolite.presentation.components.TodoInputSection
 import ua.knu.maksym_pashchenko.todolite.presentation.components.TodoList
 import ua.knu.maksym_pashchenko.todolite.presentation.components.TodoStats
-import ua.knu.maksym_pashchenko.todolite.presentation.viewmodels.TodoUiState
 
 @Composable
 fun TodoHomeScreenContent(
-    uiState: TodoUiState,
+    taskText: String,
+    isError: Boolean,
+    errorMessage: String?,
+    tasks: List<TodoItem>,
     onTaskTextChange: (String) -> Unit,
     onAddTaskClick: () -> Unit,
-    onTaskCheckedChange: (Int, Boolean) -> Unit,
+    onTaskCheckedChange: (TodoItem, Boolean) -> Unit,
     onTaskDeleteClick: (Int) -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -36,19 +39,22 @@ fun TodoHomeScreenContent(
             style = MaterialTheme.typography.headlineMedium,
             modifier = Modifier.padding(bottom = 20.dp),
         )
+
         TodoInputSection(
-            taskText = uiState.taskText,
+            taskText = taskText,
             onTaskTextChange = onTaskTextChange,
             onAddTaskClick = onAddTaskClick,
-            isError = uiState.errorMessage != null,
-            errorMessage = uiState.errorMessage
+            isError = isError,
+            errorMessage = errorMessage
         )
+
         TodoStats(
-            totalTasks = uiState.tasks.size,
-            completedTasks = uiState.tasks.count { it.isDone }
+            totalTasks = tasks.size,
+            completedTasks = tasks.count { it.isDone }
         )
+
         TodoList(
-            tasks = uiState.tasks,
+            tasks = tasks,
             onTaskCheckedChange = onTaskCheckedChange,
             onTaskDeleteClick = onTaskDeleteClick,
         )

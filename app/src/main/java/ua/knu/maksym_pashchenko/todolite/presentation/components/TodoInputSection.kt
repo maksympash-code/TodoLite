@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Button
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
@@ -30,17 +31,15 @@ fun TodoInputSection(
         horizontalArrangement = Arrangement.spacedBy(8.dp),
         verticalAlignment = Alignment.CenterVertically,
     ) {
-        TextField(
+        OutlinedTextField(
             value = taskText,
             onValueChange = onTaskTextChange,
-            label = { Text("Нова задача") },
-            placeholder = { Text("Введіть текст задачі") },
             isError = isError,
             supportingText = {
-                if (errorMessage != null)
-                    Text(text = errorMessage)
-            },
-            modifier = Modifier.weight(1f)
+                if (errorMessage != null) {
+                    Text(errorMessage)
+                }
+            }
         )
         Button(
             onClick = onAddTaskClick,

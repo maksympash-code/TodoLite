@@ -18,7 +18,7 @@ import ua.knu.maksym_pashchenko.todolite.presentation.ui.theme.TodoLiteTheme
 @Composable
 fun TodoList(
     tasks: List<TodoItem>,
-    onTaskCheckedChange: (Int, Boolean) -> Unit,
+    onTaskCheckedChange: (TodoItem, Boolean) -> Unit,
     onTaskDeleteClick: (Int) -> Unit,
     modifier: Modifier = Modifier,
 ) {
