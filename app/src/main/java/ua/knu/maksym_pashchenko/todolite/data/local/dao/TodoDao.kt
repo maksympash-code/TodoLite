@@ -10,7 +10,7 @@ import ua.knu.maksym_pashchenko.todolite.data.local.entity.TodoEntity
 
 @Dao
 interface TodoDao {
-    @Query("SELECT * from todo")
+    @Query("SELECT * from todo ORDER BY isDone ASC, id DESC")
     fun getAllTasks(): Flow<List<TodoEntity>>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)

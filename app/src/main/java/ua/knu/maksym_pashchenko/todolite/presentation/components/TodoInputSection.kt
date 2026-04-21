@@ -3,14 +3,15 @@ package ua.knu.maksym_pashchenko.todolite.presentation.components
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.material3.Button
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import ua.knu.maksym_pashchenko.todolite.presentation.ui.theme.TodoLiteTheme
@@ -34,6 +35,10 @@ fun TodoInputSection(
         OutlinedTextField(
             value = taskText,
             onValueChange = onTaskTextChange,
+            label = { Text(text = "Нова задача") },
+            placeholder = { Text(text = "Введіть текст задачі") },
+            modifier = Modifier.weight(1f),
+            singleLine = true,
             isError = isError,
             supportingText = {
                 if (errorMessage != null) {
@@ -44,17 +49,26 @@ fun TodoInputSection(
         Button(
             onClick = onAddTaskClick,
             modifier = Modifier
-                .width(120.dp)
+                .widthIn(min = 96.dp)
+                .height(56.dp)
         ) {
             Text(
                 text = "Додати",
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis
             )
         }
     }
 }
 
 
-@Preview(showBackground = true)
+@Preview(
+    showBackground = true,
+    showSystemUi = true,
+    device = "id:pixel_4",
+    fontScale = 1.0f,
+    locale = "uk"
+)
 @Composable
 fun TodoInputSectionPreview() {
     TodoLiteTheme {
@@ -69,7 +83,12 @@ fun TodoInputSectionPreview() {
 }
 
 
-@Preview(showBackground = true)
+@Preview(
+    showBackground = true,
+    device = "spec:width=360dp,height=640dp,dpi=480",
+    fontScale = 1.3f,
+    locale = "uk"
+)
 @Composable
 fun TodoInputSectionErrorPreview() {
     TodoLiteTheme {
