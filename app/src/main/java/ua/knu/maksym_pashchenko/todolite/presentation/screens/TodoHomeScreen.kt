@@ -11,6 +11,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import ua.knu.maksym_pashchenko.todolite.domain.models.TodoItem
 import ua.knu.maksym_pashchenko.todolite.presentation.ui.theme.TodoLiteTheme
+import ua.knu.maksym_pashchenko.todolite.presentation.viewmodels.TaskFilter
 import ua.knu.maksym_pashchenko.todolite.presentation.viewmodels.TodoViewModel
 
 @Composable
@@ -20,17 +21,23 @@ fun TodoHomeScreen(
 ) {
     val tasks by todoViewModel.tasks.collectAsStateWithLifecycle(initialValue = emptyList())
 
+    val filteredTasks = todoViewModel.filterTasks(tasks)
+
     TodoHomeScreenContent(
         taskText = todoViewModel.taskText,
         isError = todoViewModel.errorMessage != null,
         errorMessage = todoViewModel.errorMessage,
-        tasks = tasks,
+        tasks = filteredTasks,
+        selectedFilter = todoViewModel.selectedFilter,
         onTaskTextChange = todoViewModel::onTaskTextChange,
         onAddTaskClick = todoViewModel::onAddTaskClick,
         onTaskCheckedChange = { task, isChecked ->
             todoViewModel.onTaskCheckedChange(task, isChecked)
         },
         onTaskDeleteClick = todoViewModel::onTaskDeleteClick,
+        onTaskEdit = todoViewModel::onTaskEdit,
+        onFilterSelected = todoViewModel::onFilterSelected,
+        onDeleteCompletedTasks = todoViewModel::onDeleteCompletedTasks,
         modifier = modifier,
     )
 }
@@ -48,10 +55,14 @@ fun TodoHomeScreenPreview() {
                 TodoItem(1, "Купити молоко", false),
                 TodoItem(2, "Вчити Kotlin", true)
             ),
+            selectedFilter = TaskFilter.ALL,
             onTaskTextChange = {},
             onAddTaskClick = {},
             onTaskCheckedChange = { _, _ -> },
-            onTaskDeleteClick = {}
+            onTaskDeleteClick = {},
+            onTaskEdit = {_, _ -> },
+            onFilterSelected = {},
+            onDeleteCompletedTasks = {}
         )
     }
 }

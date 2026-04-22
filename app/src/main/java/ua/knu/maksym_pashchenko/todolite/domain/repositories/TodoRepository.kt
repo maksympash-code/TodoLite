@@ -8,4 +8,5 @@ interface TodoRepository {
     suspend fun addTask(task: TodoItem)
     suspend fun updateTask(task: TodoItem)
     suspend fun deleteTaskById(taskId: Int)
+    suspend fun deleteCompletedTasks()
 }

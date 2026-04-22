@@ -20,6 +20,7 @@ fun TodoList(
     tasks: List<TodoItem>,
     onTaskCheckedChange: (TodoItem, Boolean) -> Unit,
     onTaskDeleteClick: (Int) -> Unit,
+    onTaskEditClick: (TodoItem) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     if (tasks.isEmpty()) {
@@ -48,7 +49,8 @@ fun TodoList(
                 TodoItemRow(
                     task = task,
                     onTaskCheckedChange = onTaskCheckedChange,
-                    onTaskDeleteClick = onTaskDeleteClick
+                    onTaskDeleteClick = onTaskDeleteClick,
+                    onTaskEditClick = onTaskEditClick
                     )
             }
         }
@@ -65,7 +67,8 @@ fun TodoListPreview() {
                 TodoItem(2, "Вчити Kotlin", true),
             ),
             onTaskCheckedChange = {_, _ ->},
-            onTaskDeleteClick = {}
+            onTaskDeleteClick = {},
+            onTaskEditClick = {}
         )
     }
 }
@@ -77,7 +80,8 @@ fun TodoEmptyListPreview() {
         TodoList(
             tasks = emptyList(),
             onTaskCheckedChange = {_, _ ->},
-            onTaskDeleteClick = {}
+            onTaskDeleteClick = {},
+            onTaskEditClick = {}
         )
     }
 }

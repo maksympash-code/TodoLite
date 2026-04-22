@@ -22,6 +22,21 @@ class TodoViewModel(
     var errorMessage by mutableStateOf<String?>(null)
         private set
 
+    var selectedFilter by mutableStateOf(TaskFilter.ALL)
+        private set
+
+    fun onFilterSelected(filter: TaskFilter){
+        selectedFilter = filter
+    }
+
+    fun filterTasks(tasks: List<TodoItem>): List<TodoItem> {
+        return when (selectedFilter) {
+            TaskFilter.ALL -> tasks
+            TaskFilter.ACTIVE -> tasks.filter { !it.isDone }
+            TaskFilter.COMPLETED -> tasks.filter { it.isDone }
+        }
+    }
+
     fun onTaskTextChange(newText: String) {
         taskText = newText
 
@@ -61,6 +76,18 @@ class TodoViewModel(
     fun onTaskDeleteClick(taskId: Int) {
         viewModelScope.launch {
             repository.deleteTaskById(taskId)
+        }
+    }
+
+    fun onTaskEdit(task: TodoItem, newTitle: String) {
+        viewModelScope.launch {
+            repository.updateTask(task.copy(title = newTitle))
+        }
+    }
+
+    fun onDeleteCompletedTasks() {
+        viewModelScope.launch {
+            repository.deleteCompletedTasks()
         }
     }
 }

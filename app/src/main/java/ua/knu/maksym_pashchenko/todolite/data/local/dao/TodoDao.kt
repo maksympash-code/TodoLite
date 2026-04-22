@@ -21,4 +21,7 @@ interface TodoDao {
 
     @Query("DELETE FROM todo WHERE id = :taskId")
     suspend fun deleteTaskById(taskId: Int)
+
+    @Query("DELETE FROM todo WHERE isDone = 1")
+    suspend fun deleteCompletedTasks()
 }

@@ -30,4 +30,8 @@ class TodoRepositoryImpl(
     override suspend fun deleteTaskById(taskId: Int) {
         todoDao.deleteTaskById(taskId)
     }
+
+    override suspend fun deleteCompletedTasks() {
+        todoDao.deleteCompletedTasks()
+    }
 }

@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material3.Card
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.Icon
@@ -25,6 +26,7 @@ fun TodoItemRow(
     task: TodoItem,
     onTaskCheckedChange: (TodoItem, Boolean) -> Unit,
     onTaskDeleteClick: (Int) -> Unit,
+    onTaskEditClick: (TodoItem) -> Unit,
     modifier: Modifier = Modifier
 ) {
     Card(
@@ -44,6 +46,16 @@ fun TodoItemRow(
                     .padding(end = 8.dp)
                     .weight(1f)
             )
+            IconButton(
+                onClick = {
+                    onTaskEditClick(task)
+                }
+            ) {
+                Icon(
+                    imageVector = Icons.Filled.Edit,
+                    contentDescription = "Редагувати задачу"
+                )
+            }
             IconButton(
                 onClick = {
                     onTaskDeleteClick(task.id)
@@ -72,7 +84,8 @@ fun TodoItemRowPreview() {
         TodoItemRow(
             task = TodoItem(1, "Купити телевізор", false),
             onTaskCheckedChange = {_, _ -> },
-            onTaskDeleteClick = {}
+            onTaskDeleteClick = {},
+            onTaskEditClick = {}
         )
     }
 }
