@@ -2,13 +2,9 @@ package ua.knu.maksym_pashchenko.todolite.presentation.screens
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.lifecycle.viewmodel.compose.viewModel
 import ua.knu.maksym_pashchenko.todolite.domain.models.TodoItem
 import ua.knu.maksym_pashchenko.todolite.presentation.ui.theme.TodoLiteTheme
 import ua.knu.maksym_pashchenko.todolite.presentation.viewmodels.TaskFilter
@@ -35,6 +31,7 @@ fun TodoHomeScreen(
             todoViewModel.onTaskCheckedChange(task, isChecked)
         },
         onTaskDeleteClick = todoViewModel::onTaskDeleteClick,
+        onTaskRestore = todoViewModel::onTaskRestore,
         onTaskEdit = todoViewModel::onTaskEdit,
         onFilterSelected = todoViewModel::onFilterSelected,
         onDeleteCompletedTasks = todoViewModel::onDeleteCompletedTasks,
@@ -45,7 +42,7 @@ fun TodoHomeScreen(
 
 @Preview(showBackground = true)
 @Composable
-fun TodoHomeScreenPreview() {
+fun TodoHomeScreenPreviewMixedTasks() {
     TodoLiteTheme {
         TodoHomeScreenContent(
             taskText = "Купити молоко",
@@ -60,6 +57,29 @@ fun TodoHomeScreenPreview() {
             onAddTaskClick = {},
             onTaskCheckedChange = { _, _ -> },
             onTaskDeleteClick = {},
+            onTaskRestore = {_ -> },
+            onTaskEdit = {_, _ -> },
+            onFilterSelected = {},
+            onDeleteCompletedTasks = {}
+        )
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun TodoHomeScreenPreviewEmptyState() {
+    TodoLiteTheme {
+        TodoHomeScreenContent(
+            taskText = "Купити молоко",
+            isError = false,
+            errorMessage = "",
+            tasks = listOf(),
+            selectedFilter = TaskFilter.ALL,
+            onTaskTextChange = {},
+            onAddTaskClick = {},
+            onTaskCheckedChange = { _, _ -> },
+            onTaskDeleteClick = {},
+            onTaskRestore = {_ -> },
             onTaskEdit = {_, _ -> },
             onFilterSelected = {},
             onDeleteCompletedTasks = {}

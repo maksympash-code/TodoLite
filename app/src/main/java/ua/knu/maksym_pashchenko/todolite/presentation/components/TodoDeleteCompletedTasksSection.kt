@@ -12,6 +12,7 @@ import androidx.compose.ui.unit.dp
 
 @Composable
 fun TodoDeleteCompletedTasksSection(
+    enabled: Boolean,
     onDeleteCompletedTasks: () -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -25,6 +26,7 @@ fun TodoDeleteCompletedTasksSection(
         verticalAlignment = Alignment.CenterVertically
     ) {
         Button(
+            enabled = enabled,
             onClick = onDeleteCompletedTasks,
             modifier = Modifier
         ) {

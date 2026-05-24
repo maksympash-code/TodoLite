@@ -79,6 +79,12 @@ class TodoViewModel(
         }
     }
 
+    fun onTaskRestore(task: TodoItem) {
+        viewModelScope.launch {
+            repository.addTask(task.copy(id = 0))
+        }
+    }
+
     fun onTaskEdit(task: TodoItem, newTitle: String) {
         viewModelScope.launch {
             repository.updateTask(task.copy(title = newTitle))
