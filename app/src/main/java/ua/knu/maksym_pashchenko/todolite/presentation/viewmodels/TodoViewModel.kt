@@ -86,8 +86,12 @@ class TodoViewModel(
     }
 
     fun onTaskEdit(task: TodoItem, newTitle: String) {
+        val cleanTitle = newTitle.trim()
+
+        if (cleanTitle.isEmpty()) return
+
         viewModelScope.launch {
-            repository.updateTask(task.copy(title = newTitle))
+            repository.updateTask(task.copy(title = cleanTitle))
         }
     }
 

@@ -38,7 +38,8 @@ fun TodoHomeScreenContent(
     taskText: String,
     isError: Boolean,
     errorMessage: String?,
-    tasks: List<TodoItem>,
+    allTasks: List<TodoItem>,
+    visibleTasks: List<TodoItem>,
     selectedFilter: TaskFilter,
     onTaskTextChange: (String) -> Unit,
     onAddTaskClick: () -> Unit,
@@ -87,7 +88,7 @@ fun TodoHomeScreenContent(
             )
 
             TodoDeleteCompletedTasksSection(
-                enabled = tasks.any { it.isDone },
+                enabled = allTasks.any { it.isDone },
                 onDeleteCompletedTasks = {
                     showClearCompletedDialog = true
                 }
@@ -102,15 +103,15 @@ fun TodoHomeScreenContent(
             )
 
             TodoStats(
-                totalTasks = tasks.size,
-                completedTasks = tasks.count { it.isDone }
+                totalTasks = allTasks.size,
+                completedTasks = allTasks.count { it.isDone }
             )
 
             TodoList(
-                tasks = tasks,
+                tasks = visibleTasks,
                 onTaskCheckedChange = onTaskCheckedChange,
                 onTaskDeleteClick = { taskId ->
-                    val selectedTask = tasks.firstOrNull { it.id == taskId }
+                    val selectedTask = visibleTasks.firstOrNull { it.id == taskId }
                     taskToDelete = selectedTask
                 },
                 onTaskEditClick = { task ->

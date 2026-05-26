@@ -3,8 +3,6 @@ package ua.knu.maksym_pashchenko.todolite.presentation.components
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.material3.Button
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -26,21 +24,22 @@ fun TodoFilterBar(
         ),
         verticalAlignment = Alignment.CenterVertically
     ) {
-        Button(
+        FilterButton(
+            "Усі",
+            selected = selectedFilter == TaskFilter.ALL,
             onClick = { onFilterSelected(TaskFilter.ALL) }
-        ) {
-            Text(text = "Усі")
-        }
-        Button(
-            onClick = { onFilterSelected(TaskFilter.ACTIVE) }
-        ) {
-            Text(text = "Активні")
-        }
-        Button(
-            onClick = { onFilterSelected(TaskFilter.COMPLETED) }
-        ) {
-            Text(text = "Виконані")
-        }
-    }
+        )
 
+        FilterButton(
+            "Активні",
+            selected = selectedFilter == TaskFilter.ACTIVE,
+            onClick = { onFilterSelected(TaskFilter.ACTIVE) }
+        )
+
+        FilterButton(
+            "Виконані",
+            selected = selectedFilter == TaskFilter.COMPLETED,
+            onClick = { onFilterSelected(TaskFilter.COMPLETED) }
+        )
+    }
 }

@@ -23,7 +23,8 @@ fun TodoHomeScreen(
         taskText = todoViewModel.taskText,
         isError = todoViewModel.errorMessage != null,
         errorMessage = todoViewModel.errorMessage,
-        tasks = filteredTasks,
+        allTasks = tasks,
+        visibleTasks = filteredTasks,
         selectedFilter = todoViewModel.selectedFilter,
         onTaskTextChange = todoViewModel::onTaskTextChange,
         onAddTaskClick = todoViewModel::onAddTaskClick,
@@ -48,7 +49,8 @@ fun TodoHomeScreenPreviewMixedTasks() {
             taskText = "Купити молоко",
             isError = false,
             errorMessage = "",
-            tasks = listOf(
+            allTasks = listOf(),
+            visibleTasks = listOf(
                 TodoItem(1, "Купити молоко", false),
                 TodoItem(2, "Вчити Kotlin", true)
             ),
@@ -73,7 +75,8 @@ fun TodoHomeScreenPreviewEmptyState() {
             taskText = "Купити молоко",
             isError = false,
             errorMessage = "",
-            tasks = listOf(),
+            allTasks = listOf(),
+            visibleTasks = listOf(),
             selectedFilter = TaskFilter.ALL,
             onTaskTextChange = {},
             onAddTaskClick = {},
