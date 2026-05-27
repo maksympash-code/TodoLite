@@ -26,6 +26,7 @@ fun TodoHomeScreen(
         allTasks = tasks,
         visibleTasks = filteredTasks,
         selectedFilter = todoViewModel.selectedFilter,
+        searchText = todoViewModel.searchText,
         onTaskTextChange = todoViewModel::onTaskTextChange,
         onAddTaskClick = todoViewModel::onAddTaskClick,
         onTaskCheckedChange = { task, isChecked ->
@@ -36,6 +37,7 @@ fun TodoHomeScreen(
         onTaskEdit = todoViewModel::onTaskEdit,
         onFilterSelected = todoViewModel::onFilterSelected,
         onDeleteCompletedTasks = todoViewModel::onDeleteCompletedTasks,
+        onSearchTextChange = todoViewModel::onSearchTextChange,
         modifier = modifier,
     )
 }
@@ -55,6 +57,7 @@ fun TodoHomeScreenPreviewMixedTasks() {
                 TodoItem(2, "Вчити Kotlin", true)
             ),
             selectedFilter = TaskFilter.ALL,
+            searchText = "",
             onTaskTextChange = {},
             onAddTaskClick = {},
             onTaskCheckedChange = { _, _ -> },
@@ -62,7 +65,8 @@ fun TodoHomeScreenPreviewMixedTasks() {
             onTaskRestore = {_ -> },
             onTaskEdit = {_, _ -> },
             onFilterSelected = {},
-            onDeleteCompletedTasks = {}
+            onDeleteCompletedTasks = {},
+            onSearchTextChange = {_ -> }
         )
     }
 }
@@ -78,6 +82,7 @@ fun TodoHomeScreenPreviewEmptyState() {
             allTasks = listOf(),
             visibleTasks = listOf(),
             selectedFilter = TaskFilter.ALL,
+            searchText = "Купити молоко",
             onTaskTextChange = {},
             onAddTaskClick = {},
             onTaskCheckedChange = { _, _ -> },
@@ -85,7 +90,8 @@ fun TodoHomeScreenPreviewEmptyState() {
             onTaskRestore = {_ -> },
             onTaskEdit = {_, _ -> },
             onFilterSelected = {},
-            onDeleteCompletedTasks = {}
+            onDeleteCompletedTasks = {},
+            onSearchTextChange = {_ -> }
         )
     }
 }

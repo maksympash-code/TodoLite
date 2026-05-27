@@ -30,6 +30,7 @@ import ua.knu.maksym_pashchenko.todolite.presentation.components.TodoDeleteCompl
 import ua.knu.maksym_pashchenko.todolite.presentation.components.TodoFilterBar
 import ua.knu.maksym_pashchenko.todolite.presentation.components.TodoInputSection
 import ua.knu.maksym_pashchenko.todolite.presentation.components.TodoList
+import ua.knu.maksym_pashchenko.todolite.presentation.components.TodoSearchSection
 import ua.knu.maksym_pashchenko.todolite.presentation.components.TodoStats
 import ua.knu.maksym_pashchenko.todolite.presentation.viewmodels.TaskFilter
 
@@ -41,6 +42,7 @@ fun TodoHomeScreenContent(
     allTasks: List<TodoItem>,
     visibleTasks: List<TodoItem>,
     selectedFilter: TaskFilter,
+    searchText: String,
     onTaskTextChange: (String) -> Unit,
     onAddTaskClick: () -> Unit,
     onTaskCheckedChange: (TodoItem, Boolean) -> Unit,
@@ -49,6 +51,7 @@ fun TodoHomeScreenContent(
     onTaskEdit: (TodoItem, String) -> Unit,
     onFilterSelected: (TaskFilter) -> Unit,
     onDeleteCompletedTasks: () -> Unit,
+    onSearchTextChange: (String) -> Unit,
     modifier: Modifier = Modifier
 ) {
     var editingTask by remember { mutableStateOf<TodoItem?>(null) }
@@ -59,6 +62,22 @@ fun TodoHomeScreenContent(
 
     val snackBarHostState = remember { SnackbarHostState() }
     val scope = rememberCoroutineScope()
+
+    val emptyTitle = when {
+        allTasks.isEmpty() -> "Задач поки немає"
+        searchText.isNotBlank() -> "Нічого не знайдено"
+        selectedFilter == TaskFilter.ACTIVE -> "Активних задач немає"
+        selectedFilter == TaskFilter.COMPLETED -> "Виконаних задач немає"
+        else -> "Задач поки немає"
+    }
+
+    val emptySubtitle = when {
+        allTasks.isEmpty() -> "Додай першу задачу вище"
+        searchText.isNotBlank() -> "Спробуй змінити текст пошуку"
+        selectedFilter == TaskFilter.ACTIVE -> "Можеш відпочити або додати нову задачу"
+        selectedFilter == TaskFilter.COMPLETED -> "Познач якусь задачу виконаною"
+        else -> "Додай першу задачу вище"
+    }
 
 
     Scaffold(
@@ -85,13 +104,21 @@ fun TodoHomeScreenContent(
             TodoFilterBar(
                 selectedFilter = selectedFilter,
                 onFilterSelected = onFilterSelected,
+                modifier = Modifier.padding(top = 8.dp)
+            )
+
+            TodoSearchSection(
+                searchText = searchText,
+                onSearchTextChange = onSearchTextChange,
+                modifier = Modifier.padding(top = 8.dp),
             )
 
             TodoDeleteCompletedTasksSection(
                 enabled = allTasks.any { it.isDone },
                 onDeleteCompletedTasks = {
                     showClearCompletedDialog = true
-                }
+                },
+                modifier = Modifier.padding(top = 8.dp),
             )
 
             TodoInputSection(
@@ -109,6 +136,8 @@ fun TodoHomeScreenContent(
 
             TodoList(
                 tasks = visibleTasks,
+                emptyTitle = emptyTitle,
+                emptySubtitle = emptySubtitle,
                 onTaskCheckedChange = onTaskCheckedChange,
                 onTaskDeleteClick = { taskId ->
                     val selectedTask = visibleTasks.firstOrNull { it.id == taskId }

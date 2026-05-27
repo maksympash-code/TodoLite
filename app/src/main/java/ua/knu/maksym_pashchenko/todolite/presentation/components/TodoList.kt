@@ -18,6 +18,8 @@ import ua.knu.maksym_pashchenko.todolite.presentation.ui.theme.TodoLiteTheme
 @Composable
 fun TodoList(
     tasks: List<TodoItem>,
+    emptyTitle: String,
+    emptySubtitle: String,
     onTaskCheckedChange: (TodoItem, Boolean) -> Unit,
     onTaskDeleteClick: (Int) -> Unit,
     onTaskEditClick: (TodoItem) -> Unit,
@@ -31,8 +33,8 @@ fun TodoList(
                 .fillMaxWidth()
                 .padding(top = 32.dp, bottom = 16.dp)
         ) {
-            Text(text = "Задач поки немає")
-            Text(text = "Додай першу задачу вище")
+            Text(text = emptyTitle)
+            Text(text = emptySubtitle)
         }
 
     }
@@ -66,6 +68,8 @@ fun TodoListPreview() {
                 TodoItem(1, "Купити молоко", false),
                 TodoItem(2, "Вчити Kotlin", true),
             ),
+            emptyTitle = "",
+            emptySubtitle = "",
             onTaskCheckedChange = {_, _ ->},
             onTaskDeleteClick = {},
             onTaskEditClick = {}
@@ -79,6 +83,8 @@ fun TodoEmptyListPreview() {
     TodoLiteTheme {
         TodoList(
             tasks = emptyList(),
+            emptyTitle = "Задач поки немає",
+            emptySubtitle = "Додай першу задачу вище",
             onTaskCheckedChange = {_, _ ->},
             onTaskDeleteClick = {},
             onTaskEditClick = {}

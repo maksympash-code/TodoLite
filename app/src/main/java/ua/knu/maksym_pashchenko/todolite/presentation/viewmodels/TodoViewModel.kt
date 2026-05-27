@@ -25,15 +25,32 @@ class TodoViewModel(
     var selectedFilter by mutableStateOf(TaskFilter.ALL)
         private set
 
+    var searchText by mutableStateOf("")
+        private set
+
     fun onFilterSelected(filter: TaskFilter){
         selectedFilter = filter
     }
 
+    fun onSearchTextChange(newText: String) {
+        searchText = newText
+    }
+
     fun filterTasks(tasks: List<TodoItem>): List<TodoItem> {
-        return when (selectedFilter) {
+        val filteredByStatus =  when (selectedFilter) {
             TaskFilter.ALL -> tasks
             TaskFilter.ACTIVE -> tasks.filter { !it.isDone }
             TaskFilter.COMPLETED -> tasks.filter { it.isDone }
+        }
+
+        val query = searchText.trim()
+
+        return if (query.isBlank()){
+            filteredByStatus
+        } else {
+            filteredByStatus.filter {  task ->
+                task.title.contains(query, ignoreCase = true)
+            }
         }
     }
 
