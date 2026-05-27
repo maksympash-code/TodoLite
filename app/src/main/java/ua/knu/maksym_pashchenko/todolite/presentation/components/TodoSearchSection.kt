@@ -27,7 +27,7 @@ fun TodoSearchSection(
             .padding(vertical = 8.dp),
         singleLine = true,
         label = {
-            Text("Пощук задач")
+            Text("Пошук задач")
         },
         leadingIcon = {
             Icon(
