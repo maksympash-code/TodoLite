@@ -4,16 +4,13 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.SnackbarResult
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -32,6 +29,9 @@ import ua.knu.maksym_pashchenko.todolite.presentation.components.TodoInputSectio
 import ua.knu.maksym_pashchenko.todolite.presentation.components.TodoList
 import ua.knu.maksym_pashchenko.todolite.presentation.components.TodoSearchSection
 import ua.knu.maksym_pashchenko.todolite.presentation.components.TodoStats
+import ua.knu.maksym_pashchenko.todolite.presentation.components.dialogs.TodoClearCompletedDialog
+import ua.knu.maksym_pashchenko.todolite.presentation.components.dialogs.TodoDeleteDialog
+import ua.knu.maksym_pashchenko.todolite.presentation.components.dialogs.TodoEditDialog
 import ua.knu.maksym_pashchenko.todolite.presentation.viewmodels.TaskFilter
 
 @Composable
@@ -101,26 +101,6 @@ fun TodoHomeScreenContent(
                 modifier = Modifier.padding(bottom = 20.dp),
             )
 
-            TodoFilterBar(
-                selectedFilter = selectedFilter,
-                onFilterSelected = onFilterSelected,
-                modifier = Modifier.padding(top = 8.dp)
-            )
-
-            TodoSearchSection(
-                searchText = searchText,
-                onSearchTextChange = onSearchTextChange,
-                modifier = Modifier.padding(top = 8.dp),
-            )
-
-            TodoDeleteCompletedTasksSection(
-                enabled = allTasks.any { it.isDone },
-                onDeleteCompletedTasks = {
-                    showClearCompletedDialog = true
-                },
-                modifier = Modifier.padding(top = 8.dp),
-            )
-
             TodoInputSection(
                 taskText = taskText,
                 onTaskTextChange = onTaskTextChange,
@@ -133,6 +113,28 @@ fun TodoHomeScreenContent(
                 totalTasks = allTasks.size,
                 completedTasks = allTasks.count { it.isDone }
             )
+
+            TodoSearchSection(
+                searchText = searchText,
+                onSearchTextChange = onSearchTextChange,
+                modifier = Modifier.padding(top = 8.dp),
+            )
+
+            TodoFilterBar(
+                selectedFilter = selectedFilter,
+                onFilterSelected = onFilterSelected,
+                modifier = Modifier.padding(top = 8.dp)
+            )
+
+            TodoDeleteCompletedTasksSection(
+                enabled = allTasks.any { it.isDone },
+                onDeleteCompletedTasks = {
+                    showClearCompletedDialog = true
+                },
+                modifier = Modifier.padding(top = 8.dp),
+            )
+
+
 
             TodoList(
                 tasks = visibleTasks,
@@ -152,135 +154,81 @@ fun TodoHomeScreenContent(
     }
 
     if (taskToDelete != null){
-        AlertDialog(
-            onDismissRequest = {
-                taskToDelete = null
-            },
-            title = {
-                Text("Видалити задачу?")
-            },
-            text = {
-                Text("Цю дію не можна скасувати.")
-            },
-            confirmButton = {
-                TextButton(
-                    onClick = {
-                        val deletedTask = taskToDelete
+        TodoDeleteDialog(
+            onConfirm = {
+                val deletedTask = taskToDelete
 
-                        if (deletedTask != null) {
-                            onTaskDeleteClick(deletedTask.id)
-                            taskToDelete = null
+                if (deletedTask != null) {
+                    onTaskDeleteClick(deletedTask.id)
+                    taskToDelete = null
 
-                            scope.launch {
-                                val result = snackBarHostState.showSnackbar(
-                                    message = "Задачу видалено",
-                                    actionLabel = "Скасувати",
-                                    duration = SnackbarDuration.Long
-                                )
+                    scope.launch {
+                        val result = snackBarHostState.showSnackbar(
+                            message = "Задачу видалено",
+                            actionLabel = "Скасувати",
+                            duration = SnackbarDuration.Long
+                        )
 
-                                if (result == SnackbarResult.ActionPerformed) {
-                                    onTaskRestore(deletedTask)
-                                }
-                            }
-
+                        if (result == SnackbarResult.ActionPerformed) {
+                            onTaskRestore(deletedTask)
                         }
                     }
-                ) {
-                    Text("Видалити")
+
                 }
             },
-            dismissButton = {
-                TextButton(
-                    onClick = {
-                        taskToDelete = null
-                    }
-                ) {
-                    Text("Скасувати")
-                }
+            onDismiss = {
+                taskToDelete = null
             }
-
         )
     }
 
     if (showClearCompletedDialog) {
-        AlertDialog(
-            onDismissRequest = {
+        TodoClearCompletedDialog(
+            onConfirm = {
+                val deletedCompletedTasks = allTasks.filter { it.isDone }
+
+                onDeleteCompletedTasks()
                 showClearCompletedDialog = false
-            },
-            title = {
-                Text("Очистити всі виконані задачі?")
-            },
-            text = {
-                Text("Цю дію не можна скасувати.")
-            },
-            confirmButton = {
-                TextButton(
-                    onClick = {
-                        onDeleteCompletedTasks()
-                        showClearCompletedDialog = false
+
+                scope.launch {
+                    val result = snackBarHostState.showSnackbar(
+                        message = "Виконані задачі очищено",
+                        actionLabel = "Скасувати",
+                        duration = SnackbarDuration.Long
+                    )
+
+                    if (result == SnackbarResult.ActionPerformed) {
+                        deletedCompletedTasks.forEach { task ->
+                            onTaskRestore(task)
+                        }
                     }
-                ) {
-                    Text("Очистити")
                 }
             },
-            dismissButton = {
-                TextButton(
-                    onClick = {
-                        showClearCompletedDialog = false
-                    }
-                ) {
-                    Text("Скасувати")
-                }
+            onDismiss = {
+                showClearCompletedDialog = false
             }
         )
     }
 
     if (editingTask != null) {
-        AlertDialog(
-            onDismissRequest = {
+        TodoEditDialog(
+            editText = editText,
+            onDismiss = {
                 editingTask = null
                 editText = ""
             },
-            title = {
-                Text(text = "Редагувати задачу")
-            },
-            text = {
-                OutlinedTextField(
-                    value = editText,
-                    onValueChange = { editText = it },
-                    singleLine = true,
-                    label = { Text(text = "Новий текст") }
-                )
-            },
-            confirmButton = {
-                TextButton(
-                    onClick = {
-                        val trimmedText = editText.trim()
+            onConfirm = {
+                val trimmedText = editText.trim()
 
-                        if (trimmedText.isNotEmpty()){
-                            editingTask?.let { task ->
-                                onTaskEdit(task, trimmedText)
-                            }
-                            editingTask = null
-                            editText = ""
-                        }
-                    },
-                    enabled = editText.trim().isNotEmpty()
-                ) {
-                    Text(text = "Зберегти")
+                if (trimmedText.isNotEmpty()){
+                    editingTask?.let { task ->
+                        onTaskEdit(task, trimmedText)
+                    }
+                    editingTask = null
+                    editText = ""
                 }
             },
-            dismissButton = {
-                TextButton(
-                    onClick = {
-                        editingTask = null
-                        editText = ""
-                    }
-                ) {
-                    Text(text = "Скасувати")
-                }
-            }
+            onValueChange = { editText = it }
         )
     }
-
 }
