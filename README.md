@@ -53,3 +53,27 @@ The project uses a simple layered structure:
 
 ```bash
 git clone https://github.com/maksympash-code/TodoLite.git
+```
+
+2. Open the project in **Android Studio**.
+
+3. Wait until Gradle Sync finishes.
+
+4. Run the app on an Android emulator or a physical Android device.
+
+5. If needed, build the project manually:
+
+```bash
+./gradlew assembleDebug
+```
+
+## Project Status
+
+MVP completed.
+
+The app supports adding, editing, deleting, searching, filtering and completing tasks.
+All tasks are saved locally using Room database.
+
+## Author
+
+Created by Maksym Pashchenko.
