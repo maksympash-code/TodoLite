@@ -10,7 +10,6 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.viewmodel.compose.viewModel
 import ua.knu.maksym_pashchenko.todolite.data.local.database.DatabaseProvider
-import ua.knu.maksym_pashchenko.todolite.data.local.database.TodoDatabase
 import ua.knu.maksym_pashchenko.todolite.data.repository.TodoRepositoryImpl
 import ua.knu.maksym_pashchenko.todolite.presentation.screens.TodoHomeScreen
 import ua.knu.maksym_pashchenko.todolite.presentation.ui.theme.TodoLiteTheme
