@@ -36,16 +36,16 @@ The project uses a simple layered structure:
 ## Screenshots
 
 ### Main screen
-![Main screen](./screenshots/main_screen.jpg)
+![Main screen](./screenshots/main_screen.jpeg)
 
 ### Search
-![Search](./screenshots/search.jpg)
+![Search](./screenshots/search.jpeg)
 
 ### Edit task
-![Edit task](./screenshots/edit_task.jpg)
+![Edit task](./screenshots/edit_task.jpeg)
 
 ### Undo delete
-![Undo delete](./screenshots/undo_delete.jpg)
+![Undo delete](./screenshots/undo_delete.jpeg)
 
 ## How to Run
 
